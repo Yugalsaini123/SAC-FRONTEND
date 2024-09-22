@@ -1,0 +1,16 @@
+/* src/styles/App.css */
+.App {
+    background-color: white;
+    font-family: Arial, sans-serif;
+    text-align: center;
+  }
+  
+  html,body{
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    height: 100vh;
+    overflow: hidden;
+    box-sizing: border-box;
+  }
+
