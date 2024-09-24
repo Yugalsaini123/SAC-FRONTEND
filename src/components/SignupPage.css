@@ -1,0 +1,114 @@
+ /* src/components/SignupPage.css */
+.signup-container {
+    display: flex;
+    height: 100vh;
+    background-color: #f8fafc;
+  }
+  
+  .signup-left {
+    width: 50%;
+    background-color: #f0f5fc;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+  }
+  
+  .club-background {
+    width: 80%;
+    max-width: 500px;
+    height: auto;
+  }
+  
+  /* Right Side: Form */
+  .signup-right {
+    width: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .signup-form {
+    width: 80%;
+    max-width: 400px;
+    text-align: center;
+  }
+  
+  .signup-form h1 {
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 2rem;
+    font-weight: bold;
+  }
+  
+  .google-signup-btn,
+  .email-signup-btn {
+    width: 100%;
+    padding: 0.8rem;
+    border: none;
+    border-radius: 5px;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .google-signup-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #e0e6ed;
+    color: #333;
+  }
+  
+  .google-signup-btn img {
+    margin-right: 8px;
+  }
+  
+  .email-signup-btn {
+    background-color: #d0d7de;
+    color: #333;
+  }
+  
+  .google-signup-btn:hover,
+  .email-signup-btn:hover {
+    background-color: #bbc2c9;
+  }
+  
+  .signup-form p {
+    font-size: 1rem;
+    margin: 1rem 0;
+    color: #666;
+  }
+  
+  .terms-text {
+    font-size: 0.9rem;
+    color: #555;
+  }
+  
+  .terms-text a {
+    color: #0056b3;
+    text-decoration: none;
+  }
+  
+  .terms-text a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Responsive adjustments */
+  @media only screen and (max-width: 768px) {
+    .signup-container {
+      flex-direction: column;
+    }
+  
+    .signup-left,
+    .signup-right {
+      width: 100%;
+    }
+  
+    .club-background {
+      width: 100%;
+      max-width: none;
+    }
+  }
+  
