@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import ClubIcon from '../assets/ClubIcon.svg';
 
 const VerifyEmailPage = () => {
   const [verificationCode, setVerificationCode] = useState(new Array(6).fill(""));
@@ -30,9 +31,13 @@ const VerifyEmailPage = () => {
   };
 
   return (
-    <div className="flex justify-center items-center h-screen bg-gray-100">
-      <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-md text-center">
-        <h1 className="text-2xl mb-4"><i className="fa fa-university"></i> ClubCon</h1>
+    <div className="w-full flex justify-center items-center h-screen">
+      <div className="w-4/5 max-w-md w-full p-6 bg-white rounded-lg shadow-lg text-center">
+          <div className="flex justify-center items-center text-2xl font-bold text-black mb-6">
+            <img src={ClubIcon} alt="icon" className="w-8 h-6 mr-0" />
+            <i className="fa fa-university mr-0"></i>
+            ClubCon
+          </div>
         <p className="text-sm text-gray-600 mb-2">Please check your email</p>
         <p className="text-sm text-gray-600 mb-4">We've sent a code to <strong>abc@university.com</strong></p>
 
@@ -54,14 +59,14 @@ const VerifyEmailPage = () => {
           <button
             onClick={navigateToresetpassword}
             type="submit"
-            className="w-full py-2 px-4 bg-gray-300 text-white rounded-md hover:bg-gray-400 transition duration-300"
+            className="w-full bg-gray-300 py-2 rounded hover:bg-gray-400"
           >
             Verify
           </button>
         </form>
 
         <p className="text-sm text-gray-600">
-          Didn't receive an email? <a href="#" className="font-bold text-black hover:underline">Resend</a>
+          Didn't receive an email? <a href="#" className="text-blue-600 hover:underline">Resend</a>
         </p>
       </div>
     </div>

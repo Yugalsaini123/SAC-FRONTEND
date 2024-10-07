@@ -1,5 +1,6 @@
 // src/components/VerifyEmailPage.jsx
 import React, { useState } from 'react';
+import ClubIcon from '../assets/ClubIcon.svg'; 
 import { useNavigate } from 'react-router-dom';
 
 const VerifyEmailPage = () => {
@@ -36,7 +37,11 @@ const VerifyEmailPage = () => {
   return (
     <div className="flex justify-center items-center h-screen bg-gray-100">
       <div className="w-full max-w-md p-8 bg-white rounded-lg shadow-lg text-center">
-        <h1 className="text-2xl font-bold mb-4"><i className="fa fa-university"></i> ClubCon</h1>
+          <div className="flex justify-center items-center text-2xl font-bold text-black mb-4">
+            <img src={ClubIcon} alt="icon" className="w-8 h-6 mr-0" />
+            <i className="fa fa-university mr-0"></i>
+            ClubCon
+          </div>
         <p className="mb-2">Please check your email</p>
         <p className="mb-4">We’ve sent a code to <strong>abc@university.com</strong></p>
 
@@ -55,7 +60,7 @@ const VerifyEmailPage = () => {
             ))}
           </div>
 
-          <button onClick={navigateTosstep1} type="submit" className="w-full py-2 bg-gray-300 text-white rounded hover:bg-gray-500">Verify</button>
+          <button onClick={navigateTosstep1} type="submit" className="w-full py-2 bg-gray-300 text-black rounded hover:bg-gray-400">Verify</button>
         </form>
 
         <p className="mt-4 text-sm text-gray-600">

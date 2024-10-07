@@ -18,13 +18,18 @@
        </div>
        <div className="w-full md:w-1/2 flex justify-center items-center bg-white">
          <div className="w-4/5 max-w-md bg-white p-6 shadow-lg rounded-lg text-center">
-           <h1 className="text-2xl font-bold mb-6">Signup to <i className="fa fa-university"></i> ClubCon</h1>
-           <button className="w-full bg-gray-300 border-none py-2 rounded flex justify-center items-center cursor-pointer mb-4">
+           {/* <h1 className="text-2xl font-bold mb-6">Signup to <img src={ClubIcon} alt="icon" className="w-8 h-6 mr-0" /> <i className="fa fa-university"></i> ClubCon</h1> */}
+           <div className="flex justify-center items-center text-2xl font-bold text-black mb-6">Signup to
+            <img src={ClubIcon} alt="icon" className="w-8 h-6 mr-0 ml-2" />
+            <i className="fa fa-university mr-0"></i>
+            ClubCon
+          </div>
+           <button className="w-full bg-gray-300 border-none py-2 rounded hover:bg-gray-400 flex justify-center items-center cursor-pointer mb-4">
              <img src={GoogleIcon} alt="Google Icon" className="mr-2" />
              Signup with Google
            </button>
            <p className="mb-4">or</p>
-           <button onClick={navigateToSStep0} className="w-full bg-gray-300 border-none py-2 rounded cursor-pointer mb-4">Continue with email</button>
+           <button onClick={navigateToSStep0} className="w-full bg-gray-300 border-none py-2 rounded hover:bg-gray-400 cursor-pointer mb-4">Continue with email</button>
            <p className="text-sm text-gray-600">
              By creating an account you agree with our 
              <a href="#" className="text-blue-600 hover:underline"> Terms of Service</a>, <a href="#" className="text-blue-600 hover:underline">Privacy Policy</a>, 
