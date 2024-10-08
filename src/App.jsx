@@ -15,25 +15,34 @@ import OtpVerify from './components/OtpVerify.jsx';
 import './App.css';
 import ResetSuccessPage from './components/ResetSuccessPage.jsx';
 import ResetPasswordPage from './components/ResetPassword.jsx';
+import Dashboard from './components/Dashboard.jsx';
+import DbHeader from './components/DbHeader.jsx';
 
+const Layout = ({ children }) => (
+  <>
+    <Header />
+    {children}
+  </>
+);
 
 function App() {
   return (
     <Router>
       <div className="App">
-        <Header />
         <Routes>
-          <Route path="/" element={<MainContent />} />
-          <Route path="/signup" element={<SignupPage />} />
-          <Route path="/login" element={<LoginPage/>} />
-          <Route path="/sstep0" element={<SStep0/>} />
-          <Route path="/sstep1" element={<SStep1/>} />
-          <Route path="/sstep2" element={<SStep2/>} />
-          <Route path="/verify-email" element={<VerifyEmailPage/>} />
-          <Route path="/forgot-password" element={<ForgotPassword/>} />
-          <Route path="/otp-verify" element={<OtpVerify/>} />
-          <Route path="/reset-password" element={<ResetPasswordPage/>} />
-          <Route path="/reset-success" element={<ResetSuccessPage/>} />
+        <Route path="/" element={<Layout><MainContent /></Layout>} />
+          <Route path="/signup" element={<Layout><SignupPage /></Layout>} />
+          <Route path="/login" element={<Layout><LoginPage /></Layout>} />
+          <Route path="/sstep0" element={<Layout><SStep0 /></Layout>} />
+          <Route path="/sstep1" element={<Layout><SStep1 /></Layout>} />
+          <Route path="/sstep2" element={<Layout><SStep2 /></Layout>} />
+          <Route path="/verify-email" element={<Layout><VerifyEmailPage /></Layout>} />
+          <Route path="/forgot-password" element={<Layout><ForgotPassword /></Layout>} />
+          <Route path="/otp-verify" element={<Layout><OtpVerify /></Layout>} />
+          <Route path="/reset-password" element={<Layout><ResetPasswordPage /></Layout>} />
+          <Route path="/reset-success" element={<Layout><ResetSuccessPage /></Layout>} />
+
+          <Route path="/dashboard" element={<> <DbHeader /> <Dashboard /> </>} />
         </Routes>
       </div>
     </Router>

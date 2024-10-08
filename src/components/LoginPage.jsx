@@ -2,8 +2,14 @@ import React from 'react';
 import GoogleIcon from '../assets/googleIcon.svg'; // Google icon path
 import ClubIcon from '../assets/ClubIcon.svg';     // Club icon path
 import bgImage from '../assets/bgImage.jpeg';
+import { useNavigate } from 'react-router-dom';
 
 const LoginPage = () => {
+  const navigate = useNavigate();
+  const navigateToDashboard = () => {
+    navigate('/dashboard');
+  };
+
   return (
     <div className="flex flex-col md:flex-row items-center justify-between p-0 ">
       <div className="relative w-full md:w-3/5 h-[calc(100vh-80px)] overflow-hidden">
@@ -33,7 +39,7 @@ const LoginPage = () => {
             </div>
           </div>
           <a href="/forgot-password" className="block text-right mt-2 text-blue-600 hover:underline">Forgot password?</a>
-          <button className="w-full bg-gray-300 text-black py-2 rounded mt-4 hover:bg-gray-400">Sign In</button>
+          <button onClick={navigateToDashboard} className="w-full bg-gray-300 text-black py-2 rounded mt-4 hover:bg-gray-400">Sign In</button>
         </div>
       </div>
     </div>
