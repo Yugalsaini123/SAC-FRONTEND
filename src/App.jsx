@@ -17,6 +17,10 @@ import ResetSuccessPage from './components/ResetSuccessPage.jsx';
 import ResetPasswordPage from './components/ResetPassword.jsx';
 import Dashboard from './components/Dashboard.jsx';
 import DbHeader from './components/DbHeader.jsx';
+import EditProfile from './components/EditProfile.jsx';
+import ManageClubs from './components/ManageClubs.jsx'
+import ViewEvents from './components/ViewEvents.jsx';
+
 
 const Layout = ({ children }) => (
   <>
@@ -43,6 +47,13 @@ function App() {
           <Route path="/reset-success" element={<Layout><ResetSuccessPage /></Layout>} />
 
           <Route path="/dashboard" element={<> <DbHeader /> <Dashboard /> </>} />
+          {/* <Route path="/editprofile" element={<> <DbHeader /> <EditProfile /> </>} />
+          <Route path="/manageclub" element={<> <DbHeader /> <ManageClubs /> </>} />
+          <Route path="/viewevents" element={<> <DbHeader /> <ViewEvents /> </>} /> */}
+          
+          <Route path="/editprofile" element={<> <EditProfile /> </>} />
+          <Route path="/manageclub" element={<> <ManageClubs /> </>} />
+          <Route path="/viewevents" element={<> <ViewEvents /> </>} />
         </Routes>
       </div>
     </Router>

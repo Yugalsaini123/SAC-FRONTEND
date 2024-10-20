@@ -7,9 +7,11 @@ const Header = () => {
   return (
     <header className="bg-gray-200 border-b border-gray-300 p-4 md:p-6 flex justify-between items-center">
       <div className="flex items-center text-2xl font-bold text-black">
+        <a href="/" className="flex items-center">
         <img src={ClubIcon} alt="icon" className="w-8 h-6 mr-0" />
-        <i className="fa fa-university mr-0"></i>
-        ClubCon
+          <i className="fa fa-university mr-0"></i>
+          ClubCon
+        </a>
       </div>
 
       <nav>

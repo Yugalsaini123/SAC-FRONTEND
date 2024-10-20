@@ -6,25 +6,34 @@ import HomeIcon from '../assets/HomeIcon.svg';
 
 const Dashboard = () => {
   return (
-    <div className="flex h-screen ">
+    <div className="flex h-full ">
       {/* Sidebar */}
-      <div className="w-64 bg-gray-200 p-4">
+      <div className="w-64 bg-gray-200 p-4  h-screen">
+
         <ul className="space-y-4">
-          <li className="flex items-center text-lg p-2 bg-white rounded-lg shadow hover:bg-gray-50 transition duration-300">
+          <li className="flex items-center text-lg p-2 bg-gray-300 rounded-lg shadow hover:bg-white transition duration-300">
+          <a href="/dashboard" className="flex items-center">
             <img src={HomeIcon} alt="Home" className="w-6 h-auto mr-2" />
             Dashboard
+            </a>
           </li>
           <li className="flex items-center text-lg p-2 bg-white rounded-lg shadow hover:bg-gray-50 transition duration-300">
+          <a href="/dashboard" className="flex items-center">
             <img src={AdminIcon} alt="manage admins" className="w-6 h-auto mr-2" />
             Manage Admins
+            </a>
           </li>
           <li className="flex items-center text-lg p-2 bg-white rounded-lg shadow hover:bg-gray-50 transition duration-300">
+          <a href="/manageclub" className="flex items-center">
             <img src={ClubManageIcon} alt="manage clubs" className="w-6 h-auto mr-2" />
             Manage Clubs
+            </a>
           </li>
           <li className="flex items-center text-lg p-2 bg-white rounded-lg shadow hover:bg-gray-50 transition duration-300">
+          <a href="/viewevents" className="flex items-center">
             <img src={EventIcon} alt="view events" className="w-6 h-auto mr-2" />
             View Events
+            </a>
           </li>
         </ul>
       </div>

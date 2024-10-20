@@ -7,7 +7,7 @@ const ResetSuccessPage = () => {
 
   const handleContinue = () => {
     // Navigate to login page or dashboard
-    navigate('/login');
+    navigate('/dashboard');
   };
 
   const handleBackToLogin = () => {
