@@ -1,3 +1,4 @@
+// src/components/ViewEvents.jsx
 import React, { useState } from 'react';
 import AdminIcon from '../assets/AdminIcon.svg';
 import ClubManageIcon from '../assets/ClubManageIcon.svg';
@@ -6,6 +7,7 @@ import HomeIcon from '../assets/HomeIcon.svg';
 import ScienceImage from '../assets/ScienceImage.svg';
 import CulturalImage from '../assets/CulturalImage.svg';
 import SportsImage from '../assets/SportsImage.svg';
+import SideBar from './SideBar';
 
 const MainContent = () => {
   const [activeTab, setActiveTab] = useState('allEvents');
@@ -46,35 +48,8 @@ const MainContent = () => {
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
-      <div className="w-64 bg-gray-200 p-4 h-screen overflow-y-auto">
-        <ul className="space-y-4">
-          <li className="flex items-center text-lg p-2 bg-white rounded-lg shadow hover:bg-gray-50 transition duration-300">
-            <a href="/dashboard" className="flex items-center">
-              <img src={HomeIcon} alt="Dashboard" className="w-6 h-auto mr-2" />
-              Dashboard
-            </a>
-          </li>
-          <li className="flex items-center text-lg p-2 bg-white rounded-lg shadow hover:bg-gray-50 transition duration-300">
-            <a href="/manageadmins" className="flex items-center">
-              <img src={AdminIcon} alt="Manage Admins" className="w-6 h-auto mr-2" />
-              Manage Admins
-            </a>
-          </li>
-          <li className="flex items-center text-lg p-2 bg-white rounded-lg shadow hover:bg-gray-50 transition duration-300">
-            <a href="/manageclub" className="flex items-center">
-              <img src={ClubManageIcon} alt="Manage Clubs" className="w-6 h-auto mr-2" />
-              Manage Clubs
-            </a>
-          </li>
-          <li className="flex items-center text-lg p-2 bg-gray-300 rounded-lg shadow">
-            <a href="/viewevents" className="flex items-center">
-              <img src={EventIcon} alt="View Events" className="w-6 h-auto mr-2" />
-              View Events
-            </a>
-          </li>
-        </ul>
-      </div>
-
+      <SideBar/>
+      {/* <SideBar activeTab={activeTab} setActiveTab={setActiveTab} /> */}
       {/* Main Content */}
       <div className="flex-1 p-8 bg-gray-100 overflow-y-auto">
         {/* Tab Navigation */}
