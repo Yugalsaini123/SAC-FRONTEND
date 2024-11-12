@@ -10,11 +10,11 @@ import Sidebar from './SideBar';
 
 const ManageAdmins = () => {
   const admins = [
-    { id: '001', name: 'Shanti', email: 'shanti@gmail.com', avatar: AvatarImage },
-    { id: '001', name: 'Shanti', email: 'shanti@gmail.com', avatar: AvatarImage },
-    { id: '001', name: 'Shanti', email: 'shanti@gmail.com', avatar: AvatarImage },
-    { id: '001', name: 'Shanti', email: 'shanti@gmail.com', avatar: AvatarImage },
-    { id: '001', name: 'Shanti', email: 'shanti@gmail.com', avatar: AvatarImage }
+    { id: '001', name: 'Saloni', email: 'saloni@gmail.com', avatar: AvatarImage },
+    { id: '001', name: 'Saloni', email: 'saloni@gmail.com', avatar: AvatarImage },
+    { id: '001', name: 'Saloni', email: 'saloni@gmail.com', avatar: AvatarImage },
+    { id: '001', name: 'Saloni', email: 'saloni@gmail.com', avatar: AvatarImage },
+    { id: '001', name: 'Saloni', email: 'saloni@gmail.com', avatar: AvatarImage }
   ];
 
   return (
@@ -78,7 +78,7 @@ const ManageAdmins = () => {
                 className="w-24 h-24 rounded-full shadow-lg"
               />
               <div>
-                <p className="font-semibold">Name: Shanti</p>
+                <p className="font-semibold">Name: Saloni</p>
                 <p className="text-gray-600">Role: Club Coordinator</p>
                 <p className="text-gray-600">Designation: Prof.</p>
               </div>

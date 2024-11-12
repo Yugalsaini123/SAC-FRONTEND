@@ -18,7 +18,7 @@ const Dashboard = () => {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
           {/* Clubs Section */}
           <div className="bg-white p-6 rounded-lg shadow-lg">
-            <h3 className="text-lg font-bold mb-4">Clubs</h3>
+            <h1 className="text-lg font-bold mb-4">Clubs</h1>
             <div className="space-y-4">
               {['Music Club', 'Drama Club', 'Sports Club'].map((club, idx) => (
                 <div key={idx} className="flex justify-between items-center bg-gray-300 p-4 rounded-lg">
@@ -37,7 +37,7 @@ const Dashboard = () => {
 
           {/* Events Section */}
           <div className="bg-white p-6 rounded-lg shadow-lg">
-            <h3 className="text-lg font-bold mb-4">Events (ongoing)</h3>
+            <h1 className="text-lg font-bold mb-4">Events (ongoing)</h1>
             <div className="space-y-4">
               {['Music Com.', 'Drama Com.', 'Sports Com.'].map((event, idx) => (
                 <div key={idx} className="flex justify-between items-center bg-gray-300 p-4 rounded-lg">
@@ -54,7 +54,7 @@ const Dashboard = () => {
 
         {/* Student Coordinator Section */}
         <div className="bg-white p-6 rounded-lg shadow-lg">
-          <h3 className="text-lg font-bold mb-4">Student Coordinator</h3>
+          <h1 className="text-lg font-bold mb-4">Student Coordinator</h1>
           <div className="space-y-4">
             {[
               { name: 'Ram', club: 'Music Club' },

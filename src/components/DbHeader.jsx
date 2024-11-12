@@ -6,14 +6,16 @@ import AuthContext from '../context/OrganisationContext';
 
 const DbHeader = () => {
     const [organizationName, setOrganizationName] = useState('Loading...');
+    const [profilePicture, setProfilePicture] = useState(ProfilePicture);
     const { token, userProfile } = useContext(AuthContext);
 
     useEffect(() => {
-        const fetchOrganizationName = async () => {
+        const fetchUserData = async () => {
             try {
-                // First check if we have userProfile and organizationId
-                if (!userProfile) {
-                    console.log('No user profile found, fetching profile...');
+                let profileData = userProfile;
+                
+                // If no userProfile in context, fetch it
+                if (!profileData) {
                     const profileResponse = await fetch('api/user/getUserProfile', {
                         method: 'GET',
                         headers: {
@@ -26,68 +28,47 @@ const DbHeader = () => {
                         throw new Error('Failed to fetch user profile');
                     }
 
-                    const profileData = await profileResponse.json();
-                    const organizationId = profileData.data.organizationId;
+                    const response = await profileResponse.json();
+                    profileData = response.data.profile;
+                }
 
-                    if (!organizationId) {
-                        setOrganizationName('No Organization Found');
-                        return;
-                    }
+                // Set profile picture if it exists
+                if (profileData?.profile?.avatar) {
+                    setProfilePicture(profileData.profile.avatar);
+                }
 
-                    // Fetch organization details
-                    const organizationResponse = await fetch(`api/organization/${organizationId}`, {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`,
-                        },
-                    });
+                // Fetch organization details
+                const organizationId = profileData?.organizationId;
+                if (!organizationId) {
+                    setOrganizationName('No Organization Found');
+                    return;
+                }
 
-                    if (!organizationResponse.ok) {
-                        throw new Error('Failed to fetch organization details');
-                    }
+                const organizationResponse = await fetch(`api/organization/${organizationId}`, {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
 
-                    const orgData = await organizationResponse.json();
-                    if (orgData.data && orgData.data.organization && orgData.data.organization.name) {
-                        setOrganizationName(orgData.data.organization.name);
-                    } else {
-                        setOrganizationName('Organization name not found');
-                    }
+                if (!organizationResponse.ok) {
+                    throw new Error('Failed to fetch organization details');
+                }
+
+                const orgData = await organizationResponse.json();
+                if (orgData.data?.organization?.name) {
+                    setOrganizationName(orgData.data.organization.name);
                 } else {
-                    // If we have userProfile, use the organizationId from it
-                    const organizationId = userProfile.organizationId;
-                    
-                    if (!organizationId) {
-                        setOrganizationName('No Organization Found');
-                        return;
-                    }
-
-                    const organizationResponse = await fetch(`api/organization/${organizationId}`, {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`,
-                        },
-                    });
-
-                    if (!organizationResponse.ok) {
-                        throw new Error('Failed to fetch organization details');
-                    }
-
-                    const orgData = await organizationResponse.json();
-                    if (orgData.data && orgData.data.organization && orgData.data.organization.name) {
-                        setOrganizationName(orgData.data.organization.name);
-                    } else {
-                        setOrganizationName('Organization name not found');
-                    }
+                    setOrganizationName('Organization name not found');
                 }
             } catch (error) {
-                console.error('Error fetching organization:', error);
+                console.error('Error fetching data:', error);
                 setOrganizationName('Error loading organization');
             }
         };
 
-        fetchOrganizationName();
+        fetchUserData();
     }, [userProfile, token]);
 
     return (
@@ -105,7 +86,11 @@ const DbHeader = () => {
                     <button className="bg-gray-300 text-black px-4 py-2 rounded-md">Add Admins</button>
                     <button className="bg-gray-300 text-black px-4 py-2 rounded-md">Add Club</button>
                     <a href="/editprofile" className="flex items-center">
-                        <img src={ProfilePicture} alt="profile" className="w-10 h-10 rounded-full" />
+                        <img 
+                            src={profilePicture} 
+                            alt="profile" 
+                            className="w-10 h-10 rounded-full object-cover"
+                        />
                     </a>
                 </div>
             </nav>
@@ -114,7 +99,3 @@ const DbHeader = () => {
 };
 
 export default DbHeader;
-
-
-
-  

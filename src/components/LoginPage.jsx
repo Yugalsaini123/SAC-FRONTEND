@@ -38,7 +38,7 @@ const LoginPage = () => {
   
         if (profileResponse.ok) {
           const profileData = await profileResponse.json();
-          const organizationId = profileData.data.organizationId;
+          const organizationId = profileData.data.profile.organizationId; // Accessing nested organizationId
   
           // If organizationId is undefined, redirect to step 2 to create an organization
           if (!organizationId) {
@@ -83,8 +83,6 @@ const LoginPage = () => {
       setError('An error occurred. Please try again later.');
     }
   };
-  
-  
   
   
   
