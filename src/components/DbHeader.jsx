@@ -7,43 +7,38 @@ import AuthContext from '../context/OrganisationContext';
 const DbHeader = () => {
     const [organizationName, setOrganizationName] = useState('Loading...');
     const [profilePicture, setProfilePicture] = useState(ProfilePicture);
-    const { token, userProfile } = useContext(AuthContext);
+    const { token } = useContext(AuthContext);
 
     useEffect(() => {
-        const fetchUserData = async () => {
+        const fetchData = async () => {
             try {
-                let profileData = userProfile;
+                // First fetch the user profile
+                const profileResponse = await fetch('api/user/getUserProfile', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`,
+                    },
+                });
+
+                if (!profileResponse.ok) {
+                    throw new Error('Failed to fetch user profile');
+                }
+
+                const profileData = await profileResponse.json();
+                const organizationId = profileData.data?.profile?.organizationId;
                 
-                // If no userProfile in context, fetch it
-                if (!profileData) {
-                    const profileResponse = await fetch('api/user/getUserProfile', {
-                        method: 'GET',
-                        headers: {
-                            'Content-Type': 'application/json',
-                            'Authorization': `Bearer ${token}`,
-                        },
-                    });
-
-                    if (!profileResponse.ok) {
-                        throw new Error('Failed to fetch user profile');
-                    }
-
-                    const response = await profileResponse.json();
-                    profileData = response.data.profile;
+                // Set avatar from the nested profile object
+                if (profileData.data?.profile?.profile?.avatar) {
+                    setProfilePicture(profileData.data.profile.profile.avatar);
                 }
 
-                // Set profile picture if it exists
-                if (profileData?.profile?.avatar) {
-                    setProfilePicture(profileData.profile.avatar);
-                }
-
-                // Fetch organization details
-                const organizationId = profileData?.organizationId;
                 if (!organizationId) {
                     setOrganizationName('No Organization Found');
                     return;
                 }
 
+                // Then fetch organization details
                 const organizationResponse = await fetch(`api/organization/${organizationId}`, {
                     method: 'GET',
                     headers: {
@@ -57,19 +52,22 @@ const DbHeader = () => {
                 }
 
                 const orgData = await organizationResponse.json();
+                
+                // Set organization name from the response
                 if (orgData.data?.organization?.name) {
                     setOrganizationName(orgData.data.organization.name);
                 } else {
                     setOrganizationName('Organization name not found');
                 }
+
             } catch (error) {
                 console.error('Error fetching data:', error);
                 setOrganizationName('Error loading organization');
             }
         };
 
-        fetchUserData();
-    }, [userProfile, token]);
+        fetchData();
+    }, [token]);
 
     return (
         <header className="bg-gray-200 border-b border-gray-300 p-4 md:p-6 flex justify-between items-center">

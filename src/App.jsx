@@ -19,9 +19,11 @@ import DbHeader from './components/DbHeader';
 import EditProfile from './components/EditProfile';
 import ManageClubs from './components/ManageClubs';
 import ManageAdmins from './components/ManageAdmins.jsx';
+import Manageorg from './components/ManageOrganisation.jsx';
 import ViewEvents from './components/ViewEvents';
 import { AuthProvider } from './context/OrganisationContext';
 import SideBar from './components/SideBar';
+import DepartmentView from './components/DepartmentView.jsx';
 
 const Layout = ({ children }) => (
   <>
@@ -53,6 +55,8 @@ function App() {
             <Route path="/manageclub" element={<> <DbHeader /> <ManageClubs /> </>} />
             <Route path="/manageadmins" element={<> <DbHeader /> <ManageAdmins /> </>} />
             <Route path="/viewevents" element={<> <DbHeader /> <ViewEvents /> </>} />
+            <Route path="/manageorg" element={<> <DbHeader /> <Manageorg /> </>} />
+            <Route path="/DepartmentView" element={<> <DbHeader /> <DepartmentView /> </>} />
           </Routes>
         </div>
       </Router>

@@ -12,25 +12,18 @@ import AuthContext from '../context/OrganisationContext';
 const EditProfile = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const { token, userProfile } = useContext(AuthContext);
+  const { token, setToken, setUserProfile } = useContext(AuthContext);
   const [selectedFile, setSelectedFile] = useState(null);
-  const { setToken, setUserProfile } = useContext(AuthContext);
-  const navigate = useNavigate(); 
+  const navigate = useNavigate();
 
-  // State for form data
+  // Updated state to match API response structure
   const [personalDetails, setPersonalDetails] = useState({
     firstName: '',
     lastName: '',
     email: '',
-    contactNumber: '',
+    avatar: ProfilePicture,
     designation: '',
-    avatar: ProfilePicture, 
-    bio: '',
-    yearOfStudy: '',
-    specialization: '',
-    collegeRollNo: '',
-    univRollNo: '',
-    academicStatus: ''
+    contactNumber: ''
   });
 
   const [orgDetails, setOrgDetails] = useState({
@@ -48,100 +41,61 @@ const EditProfile = () => {
         setSelectedFile(file);
         setPersonalDetails(prev => ({
           ...prev,
-          avatar: reader.result // Set the avatar to the data URL for preview
+          avatar: reader.result
         }));
       };
       reader.readAsDataURL(file);
     }
   };
 
-  // Function to upload avatar and get URL
-  const uploadAvatar = async (file) => {
-    if (!file) return null;
-
-    const formData = new FormData();
-    formData.append('avatar', file);
-
-    try {
-      const response = await fetch('api/user/upload-avatar', {
-        method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${token}`
-        },
-        body: formData,
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to upload avatar');
-      }
-
-      const data = await response.json();
-      return data.avatarUrl; // Assuming the API returns the uploaded file URL
-    } catch (error) {
-      console.error('Avatar upload failed:', error);
-      return null;
-    }
-  };
-
   // Fetch user profile and organization details
   useEffect(() => {
     const fetchProfileAndOrgDetails = async () => {
+      setLoading(false);
       try {
-        let profileData = userProfile;
-        if (!profileData) {
-          const profileResponse = await fetch('api/user/getUserProfile', {
-            method: 'GET',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`,
-            },
-          });
-
-          if (!profileResponse.ok) {
-            throw new Error('Failed to fetch user profile');
-          }
-
-          const response = await profileResponse.json();
-          profileData = response.data.profile;
-        }
-
-        // Set personal details from profile
-        setPersonalDetails({
-          firstName: profileData.profile?.firstName || '',
-          lastName: profileData.profile?.lastName || '',
-          email: profileData.email || '',
-          contactNumber: profileData.profile?.contactNumber || '',
-          designation: profileData.profile?.designation || '',
-          avatar: profileData.profile?.avatar || ProfilePicture, // Use default if no avatar
-          bio: profileData.profile?.bio || '',
-          yearOfStudy: profileData.profile?.yearOfStudy || '',
-          specialization: profileData.profile?.specialization || '',
-          collegeRollNo: profileData.profile?.collegeRollNo || '',
-          univRollNo: profileData.profile?.univRollNo || '',
-          academicStatus: profileData.profile?.academicStatus || ''
+        const profileResponse = await fetch('api/user/getUserProfile', {
+          headers: {
+            'Authorization': `Bearer ${token}`,
+          },
         });
 
-        if (profileData.organizationId) {
-          const organizationResponse = await fetch(`api/organization/${profileData.organizationId}`, {
-            method: 'GET',
+        if (!profileResponse.ok) {
+          throw new Error('Failed to fetch user profile');
+        }
+
+        const profileData = await profileResponse.json();
+        const profile = profileData.data.profile;
+
+        // Set personal details from API response
+        setPersonalDetails({
+          firstName: profile.profile?.firstName || '',
+          lastName: profile.profile?.lastName || '',
+          email: profile.email || '',
+          avatar: profile.profile?.avatar || ProfilePicture,
+          designation: profile.profile?.designation || '',
+          contactNumber: profile.profile?.contactNumber || ''
+        });
+
+        // Get organization details if organizationId exists
+        if (profile.organizationId) {
+          const orgResponse = await fetch(`api/organization/${profile.organizationId}`, {
             headers: {
-              'Content-Type': 'application/json',
               'Authorization': `Bearer ${token}`,
             },
           });
 
-          if (!organizationResponse.ok) {
+          if (!orgResponse.ok) {
             throw new Error('Failed to fetch organization details');
           }
 
-          const orgData = await organizationResponse.json();
-          if (orgData.data && orgData.data.organization) {
-            setOrgDetails({
-              name: orgData.data.organization.name || '',
-              description: orgData.data.organization.description || '',
-              address: orgData.data.organization.address || ''
-            });
-          }
+          const orgData = await orgResponse.json();
+          const organization = orgData.data.organization;
+
+          setOrgDetails({
+            name: organization.name || '',
+            description: organization.description || '',
+            address: organization.address || ''
+          });
         }
       } catch (err) {
         setError('Failed to fetch profile or organization details');
@@ -152,20 +106,19 @@ const EditProfile = () => {
     };
 
     fetchProfileAndOrgDetails();
-  }, [token, userProfile]);
+  }, [token]);
 
-  // Function to handle personal details update
+  // Updated function to handle personal details update
   const handlePersonalUpdate = async () => {
     try {
-      let avatarUrl = personalDetails.avatar;
-      
-      // If there's a new file selected, upload it first
-      if (selectedFile) {
-        const uploadedAvatarUrl = await uploadAvatar(selectedFile);
-        if (uploadedAvatarUrl) {
-          avatarUrl = uploadedAvatarUrl;
-        }
-      }
+      // Sending request body in the exact format shown in the API response
+      const requestBody = {
+        firstName: personalDetails.firstName,
+        lastName: personalDetails.lastName,
+        avatar: personalDetails.avatar,
+        contactNumber: personalDetails.contactNumber,
+        designation: personalDetails.designation
+      };
 
       const response = await fetch('api/user/create-or-update', {
         method: 'POST',
@@ -173,21 +126,7 @@ const EditProfile = () => {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${token}`
         },
-        body: JSON.stringify({
-          ...personalDetails,
-          profile: {
-            firstName: personalDetails.firstName,
-            lastName: personalDetails.lastName,
-            bio: personalDetails.bio,
-            avatar: avatarUrl, // Use the avatar URL (either new or existing)
-            designation: personalDetails.designation,
-            yearOfStudy: personalDetails.yearOfStudy,
-            specialization: personalDetails.specialization,
-            collegeRollNo: personalDetails.collegeRollNo,
-            univRollNo: personalDetails.univRollNo,
-            academicStatus: personalDetails.academicStatus
-          }
-        }),
+        body: JSON.stringify(requestBody),
       });
 
       const data = await response.json();
@@ -202,20 +141,24 @@ const EditProfile = () => {
 
   // Function to handle organization details update
   const handleOrgUpdate = async () => {
-    // Get organizationId from the current profile data
-    const organizationId = userProfile?.organizationId || 
-                          (await (await fetch('api/user/getUserProfile', {
-                            headers: {
-                              'Authorization': `Bearer ${token}`
-                            }
-                          })).json())?.data?.profile?.organizationId;
-
-    if (!organizationId) {
-      setError('Organization ID not found in user profile');
-      return;
-    }
-
     try {
+      const profileResponse = await fetch('api/user/getUserProfile', {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+      });
+
+      if (!profileResponse.ok) {
+        throw new Error('Failed to fetch user profile');
+      }
+
+      const profileData = await profileResponse.json();
+      const organizationId = profileData.data.profile.organizationId;
+
+      if (!organizationId) {
+        throw new Error('Organization ID not found');
+      }
+
       const response = await fetch(`api/organization/update/${organizationId}`, {
         method: 'PATCH',
         headers: {
@@ -230,18 +173,16 @@ const EditProfile = () => {
         alert('Organization details updated successfully!');
       }
     } catch (err) {
-      setError('Failed to update organization details');
+      setError(err.message || 'Failed to update organization details');
       console.error('Error:', err);
     }
   };
 
-  // Handle save all changes
   const handleSaveChanges = async () => {
     await handlePersonalUpdate();
     await handleOrgUpdate();
   };
 
-  // Handle input changes for personal details
   const handlePersonalInputChange = (e) => {
     const { name, value } = e.target;
     setPersonalDetails(prev => ({
@@ -250,7 +191,6 @@ const EditProfile = () => {
     }));
   };
 
-  // Handle input changes for organization details
   const handleOrgInputChange = (e) => {
     const { name, value } = e.target;
     setOrgDetails(prev => ({
@@ -259,17 +199,12 @@ const EditProfile = () => {
     }));
   };
 
-  if (loading) {
-    return <div className="flex justify-center items-center h-screen">Loading...</div>;
-  }
-
   const handleLogout = async () => {
     try {
       const response = await fetch('/api/auth/logout', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
+          'Authorization': `Bearer ${token}`,
         },
       });
 
@@ -286,14 +221,20 @@ const EditProfile = () => {
     }
   };
 
+  if (loading) {
+    return <div className="flex justify-center items-center h-screen">Loading...</div>;
+  }
+
   return (
     <div className="flex h-screen">
       {/* Sidebar */}
       <div className="w-64 bg-gray-200 p-4">
         <ul className="space-y-4">
           <li className="flex items-center text-lg p-2 bg-white rounded-lg shadow hover:bg-gray-50 transition duration-300">
-            <img src={HomeIcon} alt="Home" className="w-6 h-auto mr-2" />
-            Home
+            <a href="/dashboard" className="flex items-center">
+              <img src={HomeIcon} alt="Home" className="w-6 h-auto mr-2" />
+              Home
+            </a>
           </li>
           <li className="flex items-center text-lg p-2 bg-white rounded-lg shadow hover:bg-gray-50 transition duration-300">
             <img src={AboutIcon} alt="About Us" className="w-6 h-auto mr-2" />
@@ -308,13 +249,13 @@ const EditProfile = () => {
             FAQ
           </li>
           <li className="flex items-center text-lg p-2 bg-white rounded-lg shadow hover:bg-gray-50 transition duration-300">
-             <a href="#" className="flex items-center w-full" onClick={handleLogout}>
-               <img src={LogoutIcon} alt="logout" className="w-6 h-auto mr-2" />
-               Log Out 
-             </a>
-           </li>
-         </ul>
-       </div>
+            <button onClick={handleLogout} className="flex items-center w-full">
+              <img src={LogoutIcon} alt="Logout" className="w-6 h-auto mr-2" />
+              Log Out
+            </button>
+          </li>
+        </ul>
+      </div>
 
       {/* Main content */}
       <main className="flex-1 p-4 overflow-y-auto">
@@ -323,7 +264,7 @@ const EditProfile = () => {
             {error}
           </div>
         )}
-        
+
         <section>
           <h2 className="text-2xl font-bold mb-2">Edit Profile</h2>
 
@@ -385,11 +326,20 @@ const EditProfile = () => {
                     type="email"
                     name="email"
                     value={personalDetails.email}
+                    readOnly
+                    className="w-full p-2 border border-gray-300 rounded-md bg-gray-100"
+                  />
+                </div>
+                {/* <div>
+                  <label className="block text-left text-sm font-medium">Contact Number:</label>
+                  <input
+                    type="text"
+                    name="contactNumber"
+                    value={personalDetails.contactNumber}
                     onChange={handlePersonalInputChange}
                     className="w-full p-2 border border-gray-300 rounded-md"
                   />
-                </div>
-
+                </div> */}
                 <div>
                   <label className="block text-left text-sm font-medium">Designation:</label>
                   <input

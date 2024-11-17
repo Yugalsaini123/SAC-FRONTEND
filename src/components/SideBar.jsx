@@ -4,6 +4,7 @@ import HomeIcon from '../assets/HomeIcon.svg';
 import AdminIcon from '../assets/AdminIcon.svg';
 import ClubManageIcon from '../assets/ClubManageIcon.svg';
 import EventIcon from '../assets/EventIcon.svg';
+import Manageorg from '../assets/Manageorg.svg';
 
 const Sidebar = () => {
   return (
@@ -31,6 +32,12 @@ const Sidebar = () => {
           <a href="/viewevents" className="flex items-center">
             <img src={EventIcon} alt="View Events" className="w-6 h-auto mr-2" />
             View Events
+          </a>
+        </li>
+        <li className="flex items-center text-lg p-2 bg-white rounded-lg shadow hover:bg-gray-50 transition duration-300">
+          <a href="/manageorg" className="flex items-center">
+            <img src={Manageorg} alt="Manage Organisations" className="w-6 h-auto mr-2" />
+            Manage Organisation
           </a>
         </li>
       </ul>

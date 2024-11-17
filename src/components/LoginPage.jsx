@@ -1,3 +1,4 @@
+// src/components/LoginPage.jsx
 import React, { useState } from 'react';
 import GoogleIcon from '../assets/googleIcon.svg';
 import ClubIcon from '../assets/ClubIcon.svg';
@@ -8,12 +9,13 @@ const LoginPage = () => {
   const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [error, setError] = useState('');
+  const [error, setError] = useState(null); // Update to handle JSX
+  const [token, setToken] = useState('');
 
   const handleLogin = async (e) => {
     e.preventDefault();
-    setError('');
-  
+    setError(null); // Clear previous error
+
     try {
       const response = await fetch('api/auth/login', {
         method: 'POST',
@@ -22,11 +24,12 @@ const LoginPage = () => {
         },
         body: JSON.stringify({ email, password }),
       });
-  
+
       if (response.ok) {
         const data = await response.json();
         const token = data.token; // Assuming token is returned after login
-  
+        setToken(token);
+
         // Get user profile to retrieve organization ID
         const profileResponse = await fetch('api/user/getUserProfile', {
           method: 'GET',
@@ -35,17 +38,17 @@ const LoginPage = () => {
             'Authorization': `Bearer ${token}`, // Passing the token for authorization
           },
         });
-  
+
         if (profileResponse.ok) {
           const profileData = await profileResponse.json();
           const organizationId = profileData.data.profile.organizationId; // Accessing nested organizationId
-  
+
           // If organizationId is undefined, redirect to step 2 to create an organization
           if (!organizationId) {
-            navigate('/sstep2'); // Redirect to step 2 for organization creation
+            navigate('/sstep1'); // Redirect to step 2 for organization creation
             return;
           }
-  
+
           // Check if the organization exists and is valid
           const orgResponse = await fetch(`api/organization/${organizationId}`, {
             method: 'GET',
@@ -53,27 +56,50 @@ const LoginPage = () => {
               'Content-Type': 'application/json',
             },
           });
-  
+
           if (orgResponse.ok) {
             const orgData = await orgResponse.json();
-  
+
             // Check if organization exists based on the response data
             if (orgData.data && orgData.data.organization) {
               navigate('/dashboard'); // Redirect to dashboard if organization exists
             } else {
-              navigate('/sstep2'); // Redirect to step 2 if organization does not exist
+              navigate('/sstep1'); // Redirect to step 2 if organization does not exist
             }
           } else {
             const orgData = await orgResponse.json();
             // If there is a 500 error and the organization could not be retrieved
             if (orgData.statusCode === 500) {
-              navigate('/sstep2'); // Redirect to step 2 if fetching the organization fails
+              navigate('/sstep1'); // Redirect to step 2 if fetching the organization fails
             } else {
               setError('Failed to check organization status.');
             }
           }
         } else {
-          setError('Failed to retrieve user profile.');
+          setError(
+            <>
+              You are already logged in on another device.{' '}
+              <a onClick={handleConfirmNewLogin} className="underline cursor-pointer">
+                Click here
+              </a>{' '}
+              to confirm new login.
+            </>
+          );
+        }
+      } else if (response.status === 409) {
+        const errorData = await response.json();
+        if (errorData.responseType === 'failure') {
+          setError(
+            <>
+              You are already logged in on another device.{' '}
+              <a onClick={handleConfirmNewLogin} className="underline cursor-pointer">
+                Click here
+              </a>{' '}
+              to confirm new login.
+            </>
+          );
+        } else {
+          setError(errorData.message || 'Login failed. Please check your credentials.');
         }
       } else {
         const errorData = await response.json();
@@ -83,9 +109,71 @@ const LoginPage = () => {
       setError('An error occurred. Please try again later.');
     }
   };
-  
-  
-  
+
+  const handleConfirmNewLogin = async () => {
+    try {
+      const response = await fetch('api/auth/confirm-new-login', { 
+        method: 'POST', 
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${token}`, 
+        }, 
+      }); 
+      if (response.ok) {
+        // Get user profile to retrieve organization ID
+        const profileResponse = await fetch('api/user/getUserProfile', {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${token}`, // Passing the token for authorization
+          },
+        });
+
+        if (profileResponse.ok) {
+          const profileData = await profileResponse.json();
+          const organizationId = profileData.data.profile.organizationId; // Accessing nested organizationId
+
+          // If organizationId is undefined, redirect to step 2 to create an organization
+          if (!organizationId) {
+            navigate('/sstep1'); // Redirect to step 2 for organization creation
+            return;
+          }
+
+          // Check if the organization exists and is valid
+          const orgResponse = await fetch(`api/organization/${organizationId}`, {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+          });
+
+          if (orgResponse.ok) {
+            const orgData = await orgResponse.json();
+
+            // Check if organization exists based on the response data
+            if (orgData.data && orgData.data.organization) {
+              navigate('/dashboard'); // Redirect to dashboard if organization exists
+            } else {
+              navigate('/sstep1'); // Redirect to step 2 if organization does not exist
+            }
+          } else {
+            const orgData = await orgResponse.json();
+            // If there is a 500 error and the organization could not be retrieved
+            if (orgData.statusCode === 500) {
+              navigate('/sstep1'); // Redirect to step 2 if fetching the organization fails
+            } else {
+              setError('Failed to check organization status.');
+            }
+          }
+        } else {
+          navigate('/sstep1');
+          setError('Failed to new login.');
+        }
+      } else { 
+        setError('Failed to confirm new login.'); 
+      }
+    } catch (error) { 
+      setError('An error occurred while confirming new login.'); 
+    }
+  };
 
   const handleGoogleSignIn = () => {
     // Redirect to the Google authentication endpoint
