@@ -98,7 +98,7 @@ const ManageOrganisation = () => {
                             <h2 className="text-2xl font-bold">Departments</h2>
                             <button
                                 onClick={() => setIsModalOpen(true)}
-                                className="text-lg font-semibold px-6 py-2 rounded-full bg-gray-300 text-black hover:bg-gray-400"
+                                className="text-lg font-semibold px-6 py-2 rounded-md bg-gray-300 text-black hover:bg-gray-400 "
                             >
                                 Add Department
                             </button>
@@ -131,7 +131,7 @@ const ManageOrganisation = () => {
                                             </div>
                                             <button 
                                                 onClick={() => handleDepartmentClick(department)}
-                                                className="bg-white text-sm font-semibold px-4 py-2 rounded-full shadow hover:bg-gray-100 transition"
+                                                className="bg-white text-sm font-semibold px-4 py-2 rounded-md shadow hover:bg-gray-200 transition"
                                             >
                                                 View
                                             </button>

@@ -5,6 +5,7 @@ import AdminIcon from '../assets/AdminIcon.svg';
 import ClubManageIcon from '../assets/ClubManageIcon.svg';
 import EventIcon from '../assets/EventIcon.svg';
 import Manageorg from '../assets/Manageorg.svg';
+import manageroleicon from '../assets/manageroleicon.png';
 
 const Sidebar = () => {
   return (
@@ -38,6 +39,12 @@ const Sidebar = () => {
           <a href="/manageorg" className="flex items-center">
             <img src={Manageorg} alt="Manage Organisations" className="w-6 h-auto mr-2" />
             Manage Organisation
+          </a>
+        </li>
+        <li className="flex items-center text-lg p-2 bg-white rounded-lg shadow hover:bg-gray-50 transition duration-300">
+          <a href="/managerole" className="flex items-center">
+            <img src={manageroleicon} alt="Manage Organisations" className="w-6 h-auto mr-2" />
+            Manage Roles
           </a>
         </li>
       </ul>

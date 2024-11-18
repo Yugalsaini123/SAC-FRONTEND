@@ -141,9 +141,14 @@ const DepartmentView = ({ department }) => {
                                 societies.map((society) => (
                                     <div
                                         key={society.id}
-                                        className="flex justify-between items-center bg-gray-200 bg-opacity-50 p-4 rounded-lg"
+                                        className="flex justify-between items-center p-4 bg-gray-300 rounded-lg shadow-md"
                                     >
-                                        <span className="text-lg">{society.name}</span>
+                                        <div> 
+                                            <span className="text-lg font-semibold">
+                                                {society.name}</span> {society.description && ( 
+                                                    <p className="text-sm text-gray-600">{society.description}</p> 
+                                                )} 
+                                        </div>
                                         <button className="px-6 py-1.5 bg-white rounded-md hover:bg-gray-50 transition-colors">
                                             View
                                         </button>
