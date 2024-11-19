@@ -63,7 +63,7 @@ const VerifyEmailPage = () => {
     setMessage("");
 
     try {
-      const response = await fetch('api/resendVerifyMail', {
+      const response = await fetch('api/auth/resendVerifyMail', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

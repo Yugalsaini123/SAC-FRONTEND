@@ -24,6 +24,8 @@ import ViewEvents from './components/ViewEvents';
 import { AuthProvider } from './context/OrganisationContext';
 import SideBar from './components/SideBar';
 import DepartmentView from './components/DepartmentView.jsx';
+import SocietyView from './components/SocietyView.jsx';
+import ClubView from './components/ClubView.jsx';
 import Managerole from './components/Managerole.jsx';
 
 const Layout = ({ children }) => (
@@ -58,6 +60,8 @@ function App() {
             <Route path="/viewevents" element={<> <DbHeader /> <ViewEvents /> </>} />
             <Route path="/manageorg" element={<> <DbHeader /> <Manageorg /> </>} />
             <Route path="/DepartmentView" element={<> <DbHeader /> <DepartmentView /> </>} />
+            <Route path="/SocietyView" element={<> <DbHeader /> <SocietyView /> </>} />
+            <Route path="/ClubView" element={<> <DbHeader /> <ClubView /> </>} />
             <Route path="/managerole" element={<> <DbHeader /> <Managerole /> </>} />
           </Routes>
         </div>

@@ -4,9 +4,10 @@ import { useNavigate } from 'react-router-dom';
 import AuthContext from '../context/OrganisationContext';
 import SocietyCard from './SocietyCard';
 import SideBar from './SideBar';
+import SocietyView from './SocietyView'; // Import SocietyView
 import ProfilePicture from '../assets/ProfilePicture.svg';
 
-const DepartmentView = ({ department }) => {
+const DepartmentView = ({ department, onBack }) => {
     const navigate = useNavigate();
     const { token } = useContext(AuthContext);
     const [activeTab, setActiveTab] = useState('Societies');
@@ -14,6 +15,7 @@ const DepartmentView = ({ department }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [selectedSociety, setSelectedSociety] = useState(null);
 
     const [profiles] = useState([
         {
@@ -72,6 +74,14 @@ const DepartmentView = ({ department }) => {
         fetchSocieties();
     };
 
+    const handleSocietyView = (society) => {
+        setSelectedSociety(society);
+    };
+
+    const handleBackToSocieties = () => {
+        setSelectedSociety(null);
+    };
+
     if (error) {
         return (
             <div className="flex h-screen">
@@ -83,18 +93,29 @@ const DepartmentView = ({ department }) => {
         );
     }
 
+    // If a society is selected, render SocietyView
+    if (selectedSociety) {
+        return (
+            <SocietyView 
+                society={selectedSociety} 
+                department={department}
+                onBack={handleBackToSocieties} 
+            />
+        );
+    }
+
     return (
         <div className="flex h-screen">
             <div className="flex-1 bg-gray-100 overflow-y-auto">
                 <div className="p-6">
                     <div className="flex items-center gap-4 mb-6">
-                        {/* <button
-                            onClick={() => navigate('/manageorg')}
+                        <button
+                            onClick={onBack}
                             className="px-4 py-2 rounded-md bg-gray-200 hover:bg-gray-300 transition-colors"
                         >
                             ← Back
-                        </button> */}
-                        <h1 className="text-2xl font-bold">Department View</h1>
+                        </button>
+                        <h1 className="text-2xl font-bold">Department: {department.name}</h1>
                     </div>
                     
                     <div className="bg-white p-4 rounded-lg shadow-sm mb-6">
@@ -149,7 +170,10 @@ const DepartmentView = ({ department }) => {
                                                     <p className="text-sm text-gray-600">{society.description}</p> 
                                                 )} 
                                         </div>
-                                        <button className="px-6 py-1.5 bg-white rounded-md hover:bg-gray-50 transition-colors">
+                                        <button 
+                                            onClick={() => handleSocietyView(society)}
+                                            className="px-6 py-1.5 bg-white rounded-md hover:bg-gray-50 transition-colors"
+                                        >
                                             View
                                         </button>
                                     </div>

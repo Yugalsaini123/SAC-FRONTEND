@@ -5,6 +5,7 @@ import AuthContext from '../context/OrganisationContext';
 
 const Dashboard = () => {
   const [departments, setDepartments] = useState([]);
+  const [roles, setRoles] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
   const [organizationId, setOrganizationId] = useState(null);
@@ -60,6 +61,27 @@ const Dashboard = () => {
     }
   };
 
+  const fetchRoles = async () => {
+    try {
+      const response = await fetch('/api/role/getAllRoles', {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch roles');
+      }
+
+      const data = await response.json();
+      const rolesData = data?.data?.roles || [];
+      setRoles(rolesData);
+    } catch (err) {
+      setError(err.message);
+      console.error('Error fetching roles:', err);
+    }
+  };
+
   useEffect(() => {
     fetchUserProfile();
   }, [token]);
@@ -67,6 +89,7 @@ const Dashboard = () => {
   useEffect(() => {
     if (organizationId) {
       fetchDepartments();
+      fetchRoles();
     }
   }, [token, organizationId]);
 
@@ -88,8 +111,8 @@ const Dashboard = () => {
               <h2 className="text-2xl font-bold">{departments.length}</h2>
             </div>
             <div className="bg-gray-300 p-6 rounded-lg shadow">
-              <p>Total Admins</p>
-              <h2 className="text-2xl font-bold">0</h2>
+              <p>Total Roles</p>
+              <h2 className="text-2xl font-bold">{roles.length}</h2> 
             </div>
             <div className="bg-gray-300 p-6 rounded-lg shadow">
               <p>Upcoming Events</p>
