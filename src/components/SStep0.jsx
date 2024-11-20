@@ -14,7 +14,7 @@ const LoginPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
-
+  
     try {
       const response = await fetch('api/auth/registerSuperAdmin', {
         method: 'POST',
@@ -23,9 +23,10 @@ const LoginPage = () => {
         },
         body: JSON.stringify({ username, email, password }),
       });
-
+  
       if (response.ok) {
-        navigate('/verify-email');
+        localStorage.setItem('registrationEmail', email); // Add this line
+        navigate('/verify-email', { state: { email } });
       } else {
         const errorData = await response.json();
         setError(errorData.message || 'Registration failed. Please try again.');

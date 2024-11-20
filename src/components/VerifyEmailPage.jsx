@@ -8,6 +8,7 @@ const VerifyEmailPage = () => {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [message, setMessage] = useState("");
+  const [isResending, setIsResending] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
@@ -15,6 +16,14 @@ const VerifyEmailPage = () => {
     // Extract email from the location state (passed from the registration page)
     if (location.state && location.state.email) {
       setEmail(location.state.email);
+    } else {
+      // If email is not in location state, try to get it from localStorage
+      const storedEmail = localStorage.getItem('registrationEmail');
+      if (storedEmail) {
+        setEmail(storedEmail);
+      } else {
+        setError("Email information not found. Please try registering again.");
+      }
     }
   }, [location]);
 
@@ -42,12 +51,15 @@ const VerifyEmailPage = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ token: code }),
+        body: JSON.stringify({ 
+          token: code,
+          email: email // Include email in verification request
+        }),
       });
 
       if (response.ok) {
         setMessage("Email verified successfully!");
-        // Navigate to the next step after a short delay
+        localStorage.removeItem('registrationEmail'); // Clean up stored email
         setTimeout(() => navigate('/sstep1'), 2000);
       } else {
         const errorData = await response.json();
@@ -59,8 +71,14 @@ const VerifyEmailPage = () => {
   };
 
   const handleResendEmail = async () => {
+    if (!email) {
+      setError("Email address is missing. Please try registering again.");
+      return;
+    }
+
     setError("");
     setMessage("");
+    setIsResending(true);
 
     try {
       const response = await fetch('api/auth/resendVerifyMail', {
@@ -68,7 +86,9 @@ const VerifyEmailPage = () => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ email }),
+        body: JSON.stringify({
+          email: email // Ensure email is included in the payload
+        }),
       });
 
       if (response.ok) {
@@ -79,6 +99,8 @@ const VerifyEmailPage = () => {
       }
     } catch (error) {
       setError("An error occurred. Please try again later.");
+    } finally {
+      setIsResending(false);
     }
   };
 
@@ -91,33 +113,24 @@ const VerifyEmailPage = () => {
           ClubCon
         </div>
         <p className="mb-2">Please check your email</p>
-        <p className="mb-4">We've sent a verification mail, click the link in it to verify your e-mail <strong>{email}</strong></p>
+        {email ? (
+          <p className="mb-4">We've sent a verification mail, click the link in it to verify your e-mail <strong>{email}</strong></p>
+        ) : (
+          <p className="text-red-500 mb-4">Email address not found. Please try registering again.</p>
+        )}
         
         {error && <p className="text-red-500 mb-4">{error}</p>}
         {message && <p className="text-green-500 mb-4">{message}</p>}
-
-        {/* <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="flex justify-between space-x-2">
-            {verificationCode.map((value, index) => (
-              <input
-                key={index}
-                id={`code-input-${index}`}
-                type="text"
-                value={value}
-                maxLength="1"
-                onChange={(e) => handleInputChange(e, index)}
-                className="w-12 h-12 text-xl text-center border border-gray-300 rounded focus:outline-none focus:border-blue-500"
-              />
-            ))}
-          </div>
-          
-          <button type="submit" className="w-full py-2 bg-gray-300 text-black rounded hover:bg-gray-400">
-            Verify
-          </button>
-        </form> */}
         
         <p className="mt-4 text-sm text-gray-600">
-          Didn't receive verification email? <button onClick={handleResendEmail} className="text-blue-600 hover:underline">Resend</button>
+          Didn't receive verification email?{' '}
+          <button 
+            onClick={handleResendEmail} 
+            className={`text-blue-600 hover:underline ${isResending ? 'opacity-50 cursor-not-allowed' : ''}`}
+            disabled={isResending || !email}
+          >
+            {isResending ? 'Resending...' : 'Resend'}
+          </button>
         </p>
       </div>
     </div>

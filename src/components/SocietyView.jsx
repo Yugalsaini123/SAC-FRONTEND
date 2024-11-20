@@ -1,5 +1,4 @@
 // src/components/SocietyView.jsx
-// src/components/SocietyView.jsx
 import React, { useState, useEffect, useContext } from 'react';
 import AuthContext from '../context/OrganisationContext';
 import ClubCard from './ClubCard';
